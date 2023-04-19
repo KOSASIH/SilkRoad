@@ -14,22 +14,22 @@ namespace A2PPaymentSystem
             string apiEndpoint = "https://yourapiendpoint.com/payments";
             string apiKey = "yourapikey";
             string apiSecret = "yourapisecret";
-            
+
             // Define your payment parameters
             string amount = "10.00";
             string currency = "USD";
             string description = "Test Payment";
-            
+
             // Generate a unique nonce
             string nonce = Guid.NewGuid().ToString();
-            
+
             // Generate a timestamp
             string timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            
+
             // Generate a signature
             string signatureData = $"{apiKey}{nonce}{timestamp}{amount}{currency}{description}";
             string signature = ComputeHmacSha256Hash(signatureData, apiSecret);
-            
+
             // Construct the payment request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiEndpoint);
             request.Method = "POST";
@@ -38,7 +38,7 @@ namespace A2PPaymentSystem
             request.Headers.Add("X-API-Nonce", nonce);
             request.Headers.Add("X-API-Timestamp", timestamp);
             request.Headers.Add("X-API-Signature", signature);
-            
+
             // Send the payment request
             string requestBody = $"{{\"amount\":\"{amount}\",\"currency\":\"{currency}\",\"description\":\"{description}\"}}";
             byte[] requestBodyBytes = Encoding.UTF8.GetBytes(requestBody);
@@ -54,7 +54,7 @@ namespace A2PPaymentSystem
                 Console.WriteLine(responseText);
             }
         }
-        
+
         static string ComputeHmacSha256Hash(string data, string key)
         {
             byte[] keyBytes = Encoding.UTF8.GetBytes(key);
